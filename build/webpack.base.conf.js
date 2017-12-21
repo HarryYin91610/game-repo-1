@@ -20,10 +20,8 @@ const createLintingRule = () => ({
 })
 
 module.exports = {
-  context: path.resolve(__dirname, '../'),
-  entry: {
-    app: './src/main.js'
-  },
+  // context: path.resolve(__dirname, '../'),
+  entry: config.base.entry,
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -50,6 +48,14 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      },
+      {
+        test: /\.jade$/,
+        loader: 'jade-loader'
+      },
+      {
+        test: /\.pug$/,
+        loader: 'pug-loader'
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

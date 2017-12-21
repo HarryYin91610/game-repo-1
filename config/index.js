@@ -3,8 +3,27 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
+const fs = require('fs')
+var distPath = path.resolve(__dirname, '../dist')
 
-module.exports = {
+class ProjectConfig {
+  constructor ({ filename, template, templateDistPath, inject, keepHTMLComment }) {
+    this.filename = filename
+    this.template = template
+    this.templateDistPath = templateDistPath
+    this.inject = inject
+    this.keepHTMLComment = keepHTMLComment
+  }
+}
+
+var config = {
+  // 基础设置.
+  base: {
+    entry: null,                    // 对应 webpack 中的 entry.
+    htmlWebpackPluginConfig: null,  // 对应 HTMLWebpackPlugin 配置.
+    openBrowser: false              // 是否在开启服务器后打开浏览器.
+  },
+
   dev: {
 
     // Paths
@@ -79,3 +98,32 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
+
+const entry = {}  // Webpack entry 配置.
+const htmlWebpackPluginConfig = {}  // HTMLWebpackPlugin 配置.
+
+// 构建所有项目
+const projectDirs = fs.readdirSync(path.resolve(__dirname, '../src'))
+projectDirs.forEach(projectName => {
+  const dirPath = path.resolve(__dirname, `../src/${projectName}`)
+  const projectJSON = require(dirPath + '/project.json')
+
+  // entry 配置.
+  entry[projectName] = dirPath + '/' + projectJSON.entry.js
+
+  // HTML Webpack Plugin 设置.
+  const link = projectJSON.name + '/' + projectJSON.devHTML  // 开发环境项目访问路径.
+  htmlWebpackPluginConfig[projectName] = new ProjectConfig({
+    filename: link,
+    template: dirPath + '/' + projectJSON.entry.template,
+    templateDistPath: `${distPath}/${projectJSON.publicHTML}`,
+    inject: !!projectJSON.inject,
+    keepHTMLComment: projectJSON.keepHTMLComment || false
+  })
+})
+
+config.base.entry = entry
+config.base.htmlWebpackPluginConfig = htmlWebpackPluginConfig
+
+module.exports = config
+

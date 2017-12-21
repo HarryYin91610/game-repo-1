@@ -46,7 +46,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`, 
+      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
       allChunks: true,
     }),
@@ -61,18 +61,28 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: 'index.html',
+      filename:'./pages/boys/index.html',
+      template: path.resolve(__dirname, '../src/pages/boys/index.html'),
       inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
+      chunks:['pages/boys/index']
+    }),
+    new HtmlWebpackPlugin({
+      filename:'./pages/goods/index.html',
+      template: path.resolve(__dirname, '../src/pages/goods/index.html'),
+      inject: true,
+      chunks:['pages/goods/index']
+    }),
+    new HtmlWebpackPlugin({
+      filename:'./pages/index/index.html',
+      template: path.resolve(__dirname, '../src/pages/index/index.html'),
+      inject: true,
+      chunks:['pages/index/index']
+    }),
+    new HtmlWebpackPlugin({
+      filename:'./pages/sotho/index.html',
+      template: path.resolve(__dirname, '../src/pages/sotho/index.html'),
+      inject: true,
+      chunks:['pages/sotho/index']
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),

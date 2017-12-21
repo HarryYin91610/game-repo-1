@@ -1,0 +1,11 @@
+{
+  "name": "goods",
+  "author": "yinhaoran",
+  "entry": {
+    "js": "index.js",
+    "template": "index.jade"
+  },
+  "devHTML": "index.html",
+  "publicHTML": "goods.html",
+  "inject": false
+}

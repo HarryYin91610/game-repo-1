@@ -1,6 +1,6 @@
-# canvas-game
+# vue-project-framework
 
-> a canvas game repo
+> this is a framework built by vue-cli
 
 ## Build Setup
 

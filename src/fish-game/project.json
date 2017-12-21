@@ -1,0 +1,11 @@
+{
+  "name": "fish-game",
+  "author": "yinhaoran",
+  "entry": {
+    "js": "index.js",
+    "template": "index.jade"
+  },
+  "devHTML": "index.html",
+  "publicHTML": "fish-game.html",
+  "inject": false
+}

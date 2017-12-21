@@ -1,4 +1,5 @@
 'use strict'
+const path = require('path')
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
@@ -11,7 +12,7 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-const devWebpackConfig = merge(baseWebpackConfig, {
+var devConfig = {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
@@ -46,12 +47,26 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
-    }),
+      filename:'index.html', //指定生成的html存放路径
+      template: path.resolve(__dirname, '../index.jade'), //指定html模板路径
+      inject: false, //是否将js等注入页面,以及指定注入的位置'head'或'body'
+      availableProjects: config.base.htmlWebpackPluginConfig
+    })
   ]
+}
+
+// 推送 htmlWebpackPlugin.
+Object.keys(config.base.htmlWebpackPluginConfig).forEach(projectName => {
+  const pluginConfig = config.base.htmlWebpackPluginConfig[projectName]
+  devConfig.plugins.push(new HtmlWebpackPlugin({
+    filename: pluginConfig.filename,
+    template: pluginConfig.template,
+    inject: pluginConfig.inject,
+    chunks: [projectName, 'vendor']
+  }))
 })
+
+devConfig = merge(baseWebpackConfig, devConfig)
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
@@ -62,19 +77,19 @@ module.exports = new Promise((resolve, reject) => {
       // publish the new Port, necessary for e2e tests
       process.env.PORT = port
       // add port to devServer config
-      devWebpackConfig.devServer.port = port
+      devConfig.devServer.port = port
 
       // Add FriendlyErrorsPlugin
-      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
+      devConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
-          messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+          messages: [`Your application is running here: http://${devConfig.devServer.host}:${port}`],
         },
         onErrors: config.dev.notifyOnErrors
         ? utils.createNotifierCallback()
         : undefined
       }))
 
-      resolve(devWebpackConfig)
+      resolve(devConfig)
     }
   })
 })
