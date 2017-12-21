@@ -1,8 +1,8 @@
 {
-  "name": "vue-project-framework",
+  "name": "game-repo-1",
   "version": "1.0.0",
-  "description": "this is a framework built by vue-cli",
-  "author": "yinhaoran <yinhaoran@bilibili.com>",
+  "description": "this is a repository of h5 games built by HarryYin",
+  "author": "yinhaoran <HarryYin91610@outlook.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
