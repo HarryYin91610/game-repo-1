@@ -13,7 +13,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
 
-const webpackConfig = merge(baseWebpackConfig, {
+var prodConfig = {
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -56,33 +56,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       cssProcessorOptions: config.build.productionSourceMap
         ? { safe: true, map: { inline: false } }
         : { safe: true }
-    }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename:'./pages/boys/index.html',
-      template: path.resolve(__dirname, '../src/pages/boys/index.html'),
-      inject: true,
-      chunks:['pages/boys/index']
-    }),
-    new HtmlWebpackPlugin({
-      filename:'./pages/goods/index.html',
-      template: path.resolve(__dirname, '../src/pages/goods/index.html'),
-      inject: true,
-      chunks:['pages/goods/index']
-    }),
-    new HtmlWebpackPlugin({
-      filename:'./pages/index/index.html',
-      template: path.resolve(__dirname, '../src/pages/index/index.html'),
-      inject: true,
-      chunks:['pages/index/index']
-    }),
-    new HtmlWebpackPlugin({
-      filename:'./pages/sotho/index.html',
-      template: path.resolve(__dirname, '../src/pages/sotho/index.html'),
-      inject: true,
-      chunks:['pages/sotho/index']
     }),
     // keep module.id stable when vender modules does not change
     new webpack.HashedModuleIdsPlugin(),
@@ -127,12 +100,36 @@ const webpackConfig = merge(baseWebpackConfig, {
       }
     ])
   ]
+}
+
+// 推送 HtmlWebpackPlugin 配置.
+Object.keys(config.base.htmlWebpackPluginConfig).forEach(projectName => {
+  const pluginConfig = config.base.htmlWebpackPluginConfig[projectName]
+  prodConfig.plugins.push(
+    new HtmlWebpackPlugin({
+      filename: process.env.NODE_ENV === 'testing'
+        ? 'index.html'
+        : pluginConfig.templateDistPath,
+      template: pluginConfig.template,
+      inject: pluginConfig.inject,
+      minify: {
+        removeComments: !pluginConfig.keepHTMLComment,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      },
+      chunks: [projectName, 'vendor', 'manifest'],
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    })
+  )
 })
+
+prodConfig = merge(baseWebpackConfig, prodConfig)
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
-  webpackConfig.plugins.push(
+  prodConfig.plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',
@@ -149,7 +146,7 @@ if (config.build.productionGzip) {
 
 if (config.build.bundleAnalyzerReport) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+  prodConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-module.exports = webpackConfig
+module.exports = prodConfig
