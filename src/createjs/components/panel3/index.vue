@@ -38,6 +38,8 @@
         ],
         sky: {},
         ground: {},
+        hill1: {},
+        hill2: {},
         grant: {}
       }
     },
@@ -56,7 +58,7 @@
         let count = 0
         for (let imgItem of this.imgRes) {
           imgItem.el = new Image()
-          imgItem.el.src = require('./assets/' + imgItem.name)
+          imgItem.el.src = require('../../assets/' + imgItem.name)
           imgItem.el.onload = () => {
             count++
             if (count === this.imgRes.length) {
@@ -80,6 +82,13 @@
         //By default swapping between Stage for StageGL will not allow for vector drawing operation such as BitmapFill, useless you cache your shape.
         this.ground.cache(0, 0, this.cwidth + gImg.width, gImg.height)
 
+        this.hill1 = new createjs.Bitmap(this.imgRes[3].el)
+        this.hill1.setTransform(Math.random() * this.cwidth, this.cheight - this.hill1.image.height * 4 - gImg.height, 4, 4)
+        this.hill1.alpha = 0.5
+
+        this.hill2 = new createjs.Bitmap(this.imgRes[4].el);
+		    this.hill2.setTransform(Math.random() * this.cwidth, this.cheight - this.hill2.image.height * 3 - gImg.height, 3, 3)
+
         let spriteSheet = new createjs.SpriteSheet({
           framerate: 30,
           images: [this.imgRes[0].el],
@@ -93,7 +102,7 @@
         this.grant = new createjs.Sprite(spriteSheet, 'run')
         this.grant.y = 35
 
-        this.stage.addChild(this.sky, this.ground, this.grant)
+        this.stage.addChild(this.sky, this.ground, this.hill1, this.hill2, this.grant)
         this.stage.addEventListener("stagemousedown", this.handleJumpStart)
 
         createjs.Ticker.timingMode = createjs.Ticker.RAF
@@ -107,6 +116,15 @@
         this.grant.x = (position >= this.cwidth + grantW) ? -grantW : position
 
         this.ground.x = (this.ground.x - deltaS * 150) % this.ground.tileW
+
+        this.hill1.x = (this.hill1.x - deltaS * 30)
+        if (this.hill1.x + this.hill1.image.width * this.hill1.scaleX <= 0) {
+          this.hill1.x = this.cwidth
+        }
+        this.hill2.x = (this.hill2.x - deltaS * 45)
+        if (this.hill2.x + this.hill2.image.width * this.hill2.scaleX <= 0) {
+          this.hill2.x = this.cwidth
+        }
 
         this.stage.update(event)
       },

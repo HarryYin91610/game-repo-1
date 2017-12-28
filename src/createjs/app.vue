@@ -1,10 +1,35 @@
 <template lang="jade">
-  div.app-wrapper goods
+  div.app-wrapper
+    router-view
 </template>
 
 <style lang="stylus" scoped>
 </style>
 
 <script>
-  export default {}
+  export default {
+    methods: {
+      handleNav (dest) {
+        switch (dest) {
+          case 'panel1':
+          case 'panel2':
+          case 'panel3':
+            this.$router.push('/' + dest)
+            break
+          default:
+            this.$router.push('/')
+        }
+        window.scrollTo(0, 0)
+      }
+    },
+    mounted () {
+      // 首次加载后根据link调整nav和router
+      this.handleNav(this.$route.path.substr(1))
+    },
+    watch: {
+      '$route.path': function (newVal) {
+        this.handleNav(newVal.substr(1))
+      }
+    }
+  }
 </script>

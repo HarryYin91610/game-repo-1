@@ -1,11 +1,11 @@
 {
-  "name": "goods",
+  "name": "createjs test demo",
   "author": "yinhaoran",
   "entry": {
     "js": "index.js",
     "template": "index.jade"
   },
   "devHTML": "index.html",
-  "publicHTML": "goods.html",
+  "publicHTML": "createjs-test.html",
   "inject": false
 }
