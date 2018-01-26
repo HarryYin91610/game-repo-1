@@ -1,5 +1,5 @@
 {
-  "name": "createjs test demo",
+  "name": "createjs-test-demo",
   "author": "yinhaoran",
   "entry": {
     "js": "index.js",

@@ -1,5 +1,15 @@
 <template lang="jade">
   div.app-wrapper
+    div.nav-bar
+      div.user-item
+      div.menu-item
+        ul.menu-list
+          li.menu-item
+            | cache canvas性能优化
+          li.menu-item
+            | Tweenjs
+          li.menu-item
+            | 序列帧动画
     router-view
 </template>
 

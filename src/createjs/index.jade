@@ -20,5 +20,6 @@ html
     //- JS 引入.
     div
       script(src="../../static/easeljs.min.js")
+      script(src="../../static/tweenjs.min.js")
       each chunk in htmlWebpackPlugin.files.chunks
         script(src="#{chunk.entry}")

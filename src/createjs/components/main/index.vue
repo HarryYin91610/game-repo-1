@@ -1,5 +1,5 @@
 <template lang="jade">
-  div.main-wrapper main
+  div.main-wrapper
 </template>
 
 <style lang="stylus" scoped>
